@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
-import "monaco-yaml/esm/monaco.contribution";
+import "monaco-yaml/lib/esm/monaco.contribution";
 import { languages } from "monaco-editor/esm/vs/editor/editor.api";
 import { schemaV3, schemaV2, v2Uri, v3Uri } from "./schemas";
 import "monaco-editor";
+import "./Editor.css";
 
 window.MonacoEnvironment = {
   getWorkerUrl(moduleId, label) {
-    if (label === "yaml") {
-      return "/static/js/yaml.worker.chunk.js";
-    }
-    return "/static/js/editor.worker.chunk.js";
+    return `./${label === "yaml" ? "yaml" : "editor"}.worker.bundle.js`;
   },
 };
 
@@ -24,6 +22,7 @@ export const Editor = () => {
     yaml.yamlDefaults.setDiagnosticsOptions({
       validate: true,
       enableSchemaRequest: true,
+      error: true,
       hover: true,
       completion: true,
       schemas: [
@@ -57,13 +56,9 @@ export const Editor = () => {
         />
       </div>
       <button>Save</button>
-
-      <MonacoEditor
-        height="600"
-        language="yaml"
-        value={value}
-        onChange={setValue}
-      />
+      <div className="Editor__Container">
+        <MonacoEditor language="yaml" value={value} onChange={setValue} />
+      </div>
     </>
   );
 };
