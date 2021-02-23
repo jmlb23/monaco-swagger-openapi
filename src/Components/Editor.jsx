@@ -5,6 +5,8 @@ import { languages } from "monaco-editor/esm/vs/editor/editor.api";
 import { schemaV3, schemaV2, v2Uri, v3Uri } from "./schemas";
 import "monaco-editor";
 import "./Editor.css";
+import SwaggerUI from "swagger-ui-react";
+import "swagger-ui-react/swagger-ui.css";
 
 window.MonacoEnvironment = {
   getWorkerUrl(moduleId, label) {
@@ -15,6 +17,8 @@ window.MonacoEnvironment = {
 const { yaml } = languages || {};
 
 export const Editor = () => {
+  window.global = window;
+  window.Buffer = window.Buffer || require("buffer").Buffer;
   const [value, setValue] = useState("");
   const [version, setVersion] = useState(2);
 
@@ -57,7 +61,15 @@ export const Editor = () => {
       </div>
       <button>Save</button>
       <div className="Editor__Container">
-        <MonacoEditor language="yaml" value={value} onChange={setValue} />
+        <MonacoEditor
+          width="50%"
+          language="yaml"
+          value={value}
+          onChange={setValue}
+        />
+        <div className="Swagger">
+          <SwaggerUI spec={value} />
+        </div>
       </div>
     </>
   );
